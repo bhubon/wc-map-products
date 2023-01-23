@@ -73,8 +73,27 @@
     outline: 1px solid #B3B3B3;
     border-radius: 5px;
 }
+
 /* search form */
 .form_wrappers {
     display: flex;
     align-items: center;
+}
+
+.input-group input {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-right: 15px;
+    height: 40px;
+    border-radius: 4px;
+    outline: none;
+}
+
+.filter_options_area {
+    margin-bottom: 21px;
+}
+
+.form_wrappers button {
+    padding: 12px 10px;
+    border-radius: 3px;
+    background: #275D94;
 }

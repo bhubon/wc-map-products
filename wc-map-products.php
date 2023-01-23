@@ -26,7 +26,7 @@ class wmp_init {
     }
 
     public function wpm_init_all_classes() {
-        add_action('wp_enqueue_scripts',[$this,'wmp_assets']);
+        add_action('wp_enqueue_scripts', [$this, 'wmp_assets']);
         self::wpm_register_metaboxes();
         self::wpm_works();
     }
@@ -39,8 +39,12 @@ class wmp_init {
     }
 
     public function wmp_assets() {
-        wp_enqueue_style('wpm-main-style', plugins_url( 'assets/css/main.css', __FILE__ ), null, '1.0');
-        wp_enqueue_script('wpm-main-script', plugins_url( 'assets/js/main.js', __FILE__ ), ['jquery'], '1.0');
+        wp_enqueue_style('wpm-main-style', plugins_url('assets/css/main.css', __FILE__), null, '1.0');
+        wp_enqueue_script('wpm-main-script', plugins_url('assets/js/main.js', __FILE__), ['jquery'], '1.0');
+
+        wp_localize_script('wpm-main-script', 'wmp_object', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+        ]);
     }
 }
 
