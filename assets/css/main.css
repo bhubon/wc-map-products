@@ -1,20 +1,31 @@
 .wmp_shop_wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .wmp_shop_wrapper .area:nth-child(1) {
     width: 40%;
 }
 
+.wmp_shop_wrapper .area:nth-child(2) {
+    width: 60%;
+    background: #fff;
+    box-shadow: 0px 0px 30px rgb(0 0 0 / 20%);
+    padding: 25px;
+    border-radius: 3px;
+}
+
 .map_area {
     width: 100%;
     height: 700px;
 }
+.map_area path:hover {
+    fill: #e67e22;
+}
 
 /* product table */
 .product_area {
-    width: 700px;
+    width: 100%;
     overflow-x: scroll;
     background: #fff;
 }
@@ -57,9 +68,38 @@
     background-color: #d9e9fa;
 }
 
+th.sorting:nth-child(2) {
+    min-width: 100px !important;
+}
+
+th.sorting:nth-child(4) {
+    min-width: 100px !important;
+}
+
+th.sorting:nth-child(5) {
+    min-width: 120px !important;
+}
+
+th.sorting:nth-child(6) {
+    min-width: 140px !important;
+}
+
+th.sorting:nth-child(8) {
+    min-width: 120px !important;
+}
+
+th.sorting:nth-child(9) {
+    min-width: 140px !important;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+    padding: 0 10px !important;
+}
+
 .product_area::-webkit-scrollbar {
     width: 1em;
-    height: 5px;
+    height: 10px;
     border-radius: 5px;
 }
 
@@ -72,6 +112,14 @@
     background-color: #B3B3B3;
     outline: 1px solid #B3B3B3;
     border-radius: 5px;
+}
+
+div#wc_map_datatable_filter {
+    display: none;
+}
+
+div#wc_map_datatable_length {
+    display: none;
 }
 
 /* search form */
@@ -97,3 +145,222 @@
     border-radius: 3px;
     background: #275D94;
 }
+
+/* select design */
+select {
+
+    /* styling */
+    background-color: white;
+    border: thin solid blue;
+    border-radius: 4px;
+    display: inline-block;
+    font: inherit;
+    line-height: 1.5em;
+    padding: 0.5em 3.5em 0.5em 1em;
+
+    /* reset */
+
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+
+/* arrows */
+
+
+
+select.minimal {
+    background-image:
+        linear-gradient(45deg, transparent 50%, gray 50%),
+        linear-gradient(135deg, gray 50%, transparent 50%),
+        linear-gradient(to right, #ccc, #ccc);
+    background-position:
+        calc(100% - 20px) calc(1em + 2px),
+        calc(100% - 15px) calc(1em + 2px),
+        calc(100% - 2.5em) 0.5em;
+    background-size:
+        5px 5px,
+        5px 5px,
+        1px 1.5em;
+    background-repeat: no-repeat;
+}
+
+select.minimal:focus {
+    background-image:
+        linear-gradient(45deg, green 50%, transparent 50%),
+        linear-gradient(135deg, transparent 50%, green 50%),
+        linear-gradient(to right, #ccc, #ccc);
+    background-position:
+        calc(100% - 15px) 1em,
+        calc(100% - 20px) 1em,
+        calc(100% - 2.5em) 0.5em;
+    background-size:
+        5px 5px,
+        5px 5px,
+        1px 1.5em;
+    background-repeat: no-repeat;
+    border-color: green;
+    outline: 0;
+}
+
+
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+/* extra */
+.product_area span.woocommerce-Price-amount.amount {
+    display: none;
+}
+
+.product_area .product.woocommerce.add_to_cart_inline a.button {
+    margin: 0;
+    font-size: 14px;
+    padding: 12px 10px;
+    background: #275D94;
+    border-radius: 3px;
+}
+
+.product_area p.product.woocommerce.add_to_cart_inline {
+    margin: 0;
+    padding: 0;
+}
+
+a.preview_button {
+    text-decoration: none !important;
+    background: #275D94;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 3px;
+}
+
+div#wc_map_datatable_paginate a {
+    background: #275D94;
+    color: #fff !important;
+    font-weight: bold;
+    border-radius: 3px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+div#wc_map_datatable_paginate {
+    margin: 10px 0;
+}
+
+div#wc_map_datatable_info {
+    margin-top: 10px;
+}
+
+/* variation info  */
+.variation_info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.45);
+    width: 100%;
+    height: 100vh;
+}
+
+.variation_wrapper {
+    background: #fff;
+    width: 50%;
+    text-align: center;
+    margin: auto;
+    color: #000;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -15%);
+    padding: 30px 15px;
+    border-radius: 5px;
+}
+
+.variation_wrapper h4 {
+    color: #000;
+    font-size: 27px;
+    margin-bottom: 20px;
+}
+
+span#variation_wrapper_close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 27px;
+    cursor: pointer;
+}
+
+a.product_cart_button {
+    font-size: 14px;
+    padding: 12px 10px;
+    background: #275D94;
+    border-radius: 3px;
+    color: #fff;
+    text-decoration: none !important;
+    margin: 10px 0;
+    display: inline-block;
+}
+
+/* loader */
+.lds-facebook {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-facebook div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: #275D94;
+    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+.lds-facebook div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+}
+
+.lds-facebook div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+}
+
+.lds-facebook div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+}
+
+@keyframes lds-facebook {
+    0% {
+        top: 8px;
+        height: 64px;
+    }
+
+    50%,
+    100% {
+        top: 24px;
+        height: 32px;
+    }
+}
+
+@media only screen and (max-width: 900px)  {
+    .wmp_shop_wrapper {
+        display: block;
+    }
+
+    .wmp_shop_wrapper .area:nth-child(1) {
+        width: 100%;
+    }
+
+    .wmp_shop_wrapper .area:nth-child(2) {
+        width: 100%;
+    }
+}
+

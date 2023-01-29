@@ -40,6 +40,10 @@ class wmp_init {
 
     public function wmp_assets() {
         wp_enqueue_style('wpm-main-style', plugins_url('assets/css/main.css', __FILE__), null, '1.0');
+        wp_enqueue_style('wpm-datatable', plugins_url('assets/css/datatables.min.css', __FILE__), null, '1.0');
+
+
+        wp_enqueue_script('wpm-datatable-js', plugins_url('assets/js/datatables.min.js', __FILE__), ['jquery'], '1.0');
         wp_enqueue_script('wpm-main-script', plugins_url('assets/js/main.js', __FILE__), ['jquery'], '1.0');
 
         wp_localize_script('wpm-main-script', 'wmp_object', [

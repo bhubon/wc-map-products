@@ -41,12 +41,5 @@ class WMP_Metaboxes {
             'type'       => 'text_money',
             'show_on_cb' => 'cmb2_hide_if_no_cats',
         ));
-        $cmb->add_field(array(
-            'name'       => __('Preview Addree Link', 'wc-map-products'),
-            'desc'       => __('Enter Preview Addree Link Here', 'wc-map-products'),
-            'id'         => 'wmp_product_preview_address',
-            'type'       => 'text_url',
-            'show_on_cb' => 'cmb2_hide_if_no_cats',
-        ));
     }
 }
