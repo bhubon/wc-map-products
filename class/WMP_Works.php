@@ -1,8 +1,9 @@
 <?php
 class WMP_Works {
     public function __construct() {
+        add_action('admin_menu', [$this, 'wmp_custom_text_admin_menu']);
         add_shortcode('wmp_map', [$this, 'wmp_map']);
-        // search form filter ajax
+        // // search form filter ajax
         add_action('wp_ajax_wmp_form_ajac_filter', [$this, 'wmp_form_ajac_filter']);
         add_action('wp_ajax_nopriv_wmp_form_ajac_filter', [$this, 'wmp_form_ajac_filter']);
         // zip 1   filter ajax
@@ -12,18 +13,19 @@ class WMP_Works {
         add_action('wp_ajax_wmp_variation_change', [$this, 'wmp_variation_change']);
         add_action('wp_ajax_nopriv_wmp_variation_change', [$this, 'wmp_variation_change']);
 
-        // add to cart valication
-        // self::wmp_custom_add_to_cart_in_out_of_stock();
-
-        // add default text menu
-        add_action('admin_menu', [$this, 'wmp_custom_text_admin_menu']);
-
+        add_action('wp_head', [$this, 'wmp_gead']);
         add_action('wp_footer', [$this, 'wmp_footer_text']);
+
+        add_filter('woocommerce_product_single_add_to_cart_text', [$this, 'woocommerce_add_to_cart_button_text_single']);
+        add_filter('woocommerce_product_add_to_cart_text', [$this, 'woocommerce_add_to_cart_button_text_archives']);
     }
+    // public function wmp_map() {
+    //     echo self::wmp_map_area();
+    // }
     public function wmp_map() {
-        echo self::wmp_map_area();
-    }
-    public function wmp_map_area() {
+        if(!is_page()){
+            return false;
+        }
         $product_data = '';
         $cart_item_id = [];
 
@@ -38,10 +40,12 @@ class WMP_Works {
             $attributes = '';
             $stock_array = [];
             $product = wc_get_product(get_the_ID());
+            if (is_admin()) return false;
 
             foreach (WC()->cart->get_cart() as $cart_item) {
                 array_push($cart_item_id, $cart_item['variation_id']);
             }
+            $attributes .= '<option selected="true" default data-pid="' . get_the_ID() . '" >' . __('Kaufoption wählen!', 'wc-map-products') . '</option>';
             if ($product->is_type('variable')) {
 
                 $variations = $product->get_available_variations();
@@ -58,13 +62,13 @@ class WMP_Works {
                         $stock_qty = $variation->get_stock_quantity();
 
                         if (in_array($variations_id, $cart_item_id)) {
-                            $if_item_one_in_cart_button_text = 'Already In Cart';
+                            $if_item_one_in_cart_button_text = 'Bereits im Warenkorb';
                         } elseif (!$stock_qty > 0) {
-                            $if_item_one_in_cart_button_text = 'Out Of Stock';
+                            $if_item_one_in_cart_button_text = 'Nicht mehr vorrätig !';
                         }
                     }
 
-                    $attributes .=  __("<option {$selected} value='$variations_id' data-pid='" . get_the_ID() . "' data-count='" . ($i + 1) . "' >" . explode('-', $variation->get_name())[1] . "</option>");
+                    $attributes .=  __("<option value='$variations_id' data-pid='" . get_the_ID() . "' data-count='" . ($i + 1) . "' >" . explode('-', $variation->get_name())[1] . "</option>");
 
                     $i++;
                 }
@@ -80,12 +84,12 @@ class WMP_Works {
                                 <td><img width="42px" src="' . get_the_post_thumbnail_url(get_the_ID(), 'thumbnail') . '"></td>
                                 <td>' . get_post_meta(get_the_ID(), 'wmp_product_zip_code', true) . '</td>
                                 <td>' . get_post_meta(get_the_ID(), 'wmp_product_city', true) . '</td>
-                                <td>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_size', true) . '</td>
+                                <td>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_size', true) . '&nbsp;KW/p</td>
                                 <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_value', true) . '</td>
-                                <td><a href="' . get_option('address_preview_url') . '" class="preview_button" target="_blank">Preview Sample</a></td>
+                                <td><a href="' . get_option('address_preview_url') . '" class="preview_button" target="_blank">Vorschau</a></td>
                                 <td><select class="minimal" onchange="variation_change(this)">' . $attributes . '</select></td>
-                                <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span><span id="' . get_the_ID() . '">' . $price . '</span></td>
-                                <td class="button_wrap" >' . $button . '</td>
+                                <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span><span id="' . get_the_ID() . '">--</span></td>
+                                <td class="button_wrap" ><a href="javascript::void(0);" disabled style="background:#7c8a99;" class="button product_cart_button" >Warenkorb</a></td>
                             </tr>';
             }
         }
@@ -604,10 +608,10 @@ class WMP_Works {
                 <form id="wc_map_filter_form">
                     <div class="form_wrappers">
                         <div class="input-group">
-                            <input type="text" id="wc_form_zip" placeholder="Enter Zip Code Or City">
+                            <input type="text" id="wc_form_zip" placeholder="' . __('PLZ oder Ort eingeben!', 'wc-map-products') . '">
                         </div>
                         <div class="input-group">
-                            <button type="submit">Search</button>
+                            <button type="submit">' . __('Suchen', 'wc-map-products') . '</button>
                         </div>
                     </div>
                 </form>
@@ -616,15 +620,15 @@ class WMP_Works {
             <table id="wc_map_datatable">
                 <thead>
                     <tr>
-                        <th>Image</th>
-                        <th>Zip Code</th>
-                        <th>City/Place</th>
-                        <th>Pv Plant Size</th>
-                        <th>Pv Plant Value</th>
-                        <th>Preview Address</th>
-                        <th>Points</th>
-                        <th>Address Price</th>
-                        <th>But Now</th>
+                        <th>Bild</th>
+                        <th>PLZ</th>
+                        <th>Ort/Stadt</th>
+                        <th>PV-Anlagengröße</th>
+                        <th>PV-Anlagenpreis Ca.</th>
+                        <th>Vorschau Adressdaten</th>
+                        <th>Kaufoption/Varianten</th>
+                        <th>Lead-Preis</th>
+                        <th>Jetzt kaufen</th>
                     </tr>
                 </thead>
                 <tbody id="wmp_tble_body" >' . $product_data . '</tbody>
@@ -635,7 +639,7 @@ class WMP_Works {
             
         </div>';
         wp_reset_postdata();
-        return $html;
+        echo  $html;
     }
 
     public function wmp_form_ajac_filter() {
@@ -658,7 +662,7 @@ class WMP_Works {
                 ),
             ),
         ));
-        if (!$query->have_posts()) {
+        if (!$query->have_posts() && $_POST['zip'] == '') {
             $query = new WP_Query(array(
                 'post_type'      => 'product',
                 'post_status'    => 'publish',
@@ -677,6 +681,7 @@ class WMP_Works {
                 foreach (WC()->cart->get_cart() as $cart_item) {
                     array_push($cart_item_id, $cart_item['variation_id']);
                 }
+                $attributes .= '<option selected="true" default data-pid="' . get_the_ID() . '" >' . __('Kaufoption wählen!', 'wc-map-products') . '</option>';
                 if ($product->is_type('variable')) {
 
                     $variations = $product->get_available_variations();
@@ -693,13 +698,13 @@ class WMP_Works {
                             $stock_qty = $variation->get_stock_quantity();
 
                             if (in_array($variations_id, $cart_item_id)) {
-                                $if_item_one_in_cart_button_text = 'Already In Cart';
+                                $if_item_one_in_cart_button_text = 'Bereits im Warenkorb';
                             } elseif (!$stock_qty > 0) {
-                                $if_item_one_in_cart_button_text = 'Out Of Stock';
+                                $if_item_one_in_cart_button_text = 'Nicht mehr vorrätig !';
                             }
                         }
 
-                        $attributes .=  __("<option {$selected} value='$variations_id' data-pid='" . get_the_ID() . "' data-count='" . ($i + 1) . "' >" . explode('-', $variation->get_name())[1] . "</option>");
+                        $attributes .=  __("<option value='$variations_id' data-pid='" . get_the_ID() . "' data-count='" . ($i + 1) . "' >" . explode('-', $variation->get_name())[1] . "</option>");
 
                         $i++;
                     }
@@ -717,27 +722,25 @@ class WMP_Works {
                                     <td>' . get_post_meta(get_the_ID(), 'wmp_product_city', true) . '</td>
                                     <td>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_size', true) . '</td>
                                     <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_value', true) . '</td>
-                                    <td><a href="' . get_option('address_preview_url') . '" class="preview_button" target="_blank">Preview Sample</a></td>
+                                    <td><a href="' . get_option('address_preview_url') . '" class="preview_button" target="_blank">Vorschau</a></td>
                                     <td><select class="minimal" onchange="variation_change(this)">' . $attributes . '</select></td>
-                                    <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span><span id="product_' . get_the_ID() . '">' . $price . '</span></td>
-                                    <td class="button_wrap" >' . $button . '</td>
+                                    <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span><span id="' . get_the_ID() . '">--</span></td>
+                                    <td class="button_wrap" ><a href="javascript::void(0);" disabled style="background:#7c8a99;" class="button product_cart_button" >Warenkorb</a></td>
                                 </tr>';
                 }
             }
-        } else {
-            $product_data = '<td valign="top" colspan="9" class="dataTables_empty"><h4>' . __('No Address Found', 'wc-map-products') . '</h4></td>';
         }
         $ajax_html = '<table id="wc_map_datatable">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Zip Code</th>
-                            <th>City/Place</th>
-                            <th>Pv Plant Size</th>
-                            <th>Pv Plant Value</th>
-                            <th>Preview Address</th>
-                            <th>Points</th>
-                            <th>Address Price</th>
+                            <th>Bild</th>
+                            <th>PLZ</th>
+                            <th>Ort/Stadt</th>
+                            <th>PV-Anlagengröße</th>
+                            <th>PV-Anlagenpreis Ca.</th>
+                            <th>Vorschau Adressdaten</th>
+                            <th>Kaufoption/Varianten</th>
+                            <th>Lead-Preis</th>
                             <th>Buy Now</th>
                         </tr>
                     </thead>
@@ -775,6 +778,7 @@ class WMP_Works {
             foreach (WC()->cart->get_cart() as $cart_item) {
                 array_push($cart_item_id, $cart_item['variation_id']);
             }
+            $attributes .= '<option selected="true" default data-pid="' . get_the_ID() . '" >' . __('Kaufoption wählen!', 'wc-map-products') . '</option>';
             if ($product->is_type('variable')) {
 
                 $variations = $product->get_available_variations();
@@ -791,13 +795,13 @@ class WMP_Works {
                         $stock_qty = $variation->get_stock_quantity();
 
                         if (in_array($variations_id, $cart_item_id)) {
-                            $if_item_one_in_cart_button_text = 'Already In Cart';
+                            $if_item_one_in_cart_button_text = 'Bereits im Warenkorb';
                         } elseif (!$stock_qty > 0) {
-                            $if_item_one_in_cart_button_text = 'Out Of Stock';
+                            $if_item_one_in_cart_button_text = 'Nicht mehr vorrätig !';
                         }
                     }
 
-                    $attributes .=  __("<option {$selected} value='$variations_id' data-pid='" . get_the_ID() . "' data-count='" . ($i + 1) . "' >" . explode('-', $variation->get_name())[1] . "</option>");
+                    $attributes .=  __("<option value='$variations_id' data-pid='" . get_the_ID() . "' data-count='" . ($i + 1) . "' >" . explode('-', $variation->get_name())[1] . "</option>");
 
                     $i++;
                 }
@@ -815,10 +819,10 @@ class WMP_Works {
                                     <td>' . get_post_meta(get_the_ID(), 'wmp_product_city', true) . '</td>
                                     <td>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_size', true) . '</td>
                                     <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span>' . get_post_meta(get_the_ID(), 'wmp_product_pv_plant_value', true) . '</td>
-                                    <td><a href="' . get_option('address_preview_url') . '" class="preview_button" target="_blank">Preview Sample</a></td>
+                                    <td><a href="' . get_option('address_preview_url') . '" class="preview_button" target="_blank">Vorschau</a></td>
                                     <td><select class="minimal" onchange="variation_change(this)">' . $attributes . '</select></td>
-                                    <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span><span id="' . get_the_ID() . '">' . $price . '</span></td>
-                                    <td class="button_wrap" >' . $button . '</td>
+                                    <td><span class="wmp_currency">' . get_woocommerce_currency_symbol() . '</span><span id="' . get_the_ID() . '">--</span></td>
+                                    <td class="button_wrap" ><a href="javascript::void(0);" disabled style="background:#7c8a99;" class="button product_cart_button" >Warenkorb</a></td>
                                 </tr>';
             }
         }
@@ -826,15 +830,15 @@ class WMP_Works {
         $ajax_html = '<table id="wc_map_datatable">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Zip Code</th>
-                            <th>City/Place</th>
-                            <th>Pv Plant Size</th>
-                            <th>Pv Plant Value</th>
-                            <th>Preview Address</th>
-                            <th>Points</th>
-                            <th>Address Price</th>
-                            <th>But Now</th>
+                            <th>Bild</th>
+                            <th>PLZ</th>
+                            <th>Ort/Stadt</th>
+                            <th>PV-Anlagengröße</th>
+                            <th>PV-Anlagenpreis Ca.</th>
+                            <th>Vorschau Adressdaten</th>
+                            <th>Kaufoption/Varianten</th>
+                            <th>Lead-Preis</th>
+                            <th>Jetzt kaufen</th>
                         </tr>
                     </thead>
                     <tbody id="wmp_tble_body" >' . $product_data . '</tbody>
@@ -865,10 +869,10 @@ class WMP_Works {
             }
 
             if (in_array($variation_id, $cart_item_id)) {
-                $data['button'] = '<a href="javascript::void(0);" class="button product_cart_button" >Already In Cart</a>';
+                $data['button'] = '<a href="javascript::void(0);" class="button product_cart_button" >Bereits im Warenkorb</a>';
                 $data['status'] = 0;
             } elseif (!$stock_qty > 0) {
-                $data['button'] = '<a href="javascript::void(0);" class="button product_cart_button" >Out Of Stock</a>';
+                $data['button'] = '<a href="javascript::void(0);" class="button product_cart_button" >Nicht mehr vorrätig !</a>';
                 $data['status'] = 0;
             } else {
                 $data['button'] = do_shortcode('[add_to_cart id="' . $variation_id . '"]');
@@ -899,7 +903,7 @@ class WMP_Works {
 
                 if (!$product->is_in_stock()) {
 
-                    echo '<a href="javascript::void(0);" rel="nofollow" class="outstock_button button">Out of Stock</a>';
+                    echo '<a href="javascript::void(0);" rel="nofollow" class="outstock_button button">Nicht mehr vorrätig !</a>';
                 } else {
 
                     woocommerce_get_template('loop/add-to-cart.php');
@@ -998,5 +1002,28 @@ class WMP_Works {
         <span id="variation_wrapper_close">X</span>
         </div>
     </div>';
+    }
+
+    function woocommerce_add_to_cart_button_text_single() {
+        return __('Warenkorb', 'wc-map-products');
+    }
+
+
+    function woocommerce_add_to_cart_button_text_archives() {
+        return __('Warenkorb', 'wc-map-products');
+    }
+
+    public function wmp_gead(){
+        if(is_page(5167)){
+            echo '<style>
+            .container {
+                width: 100% !important;
+                max-width: 1800px !important;
+            }
+            h1.entry-title.main_title {
+                display: none;
+            }
+            </style>';
+        }
     }
 }

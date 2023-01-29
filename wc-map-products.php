@@ -56,3 +56,4 @@ function wmp_init_class() {
     new wmp_init();
 }
 wmp_init_class();
+

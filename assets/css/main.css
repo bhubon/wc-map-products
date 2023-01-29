@@ -1,14 +1,15 @@
 .wmp_shop_wrapper {
     display: flex;
     justify-content: space-between;
+    margin: 60px 40px;
 }
 
 .wmp_shop_wrapper .area:nth-child(1) {
-    width: 40%;
+    width: 30%;
 }
 
 .wmp_shop_wrapper .area:nth-child(2) {
-    width: 60%;
+    width: 70%;
     background: #fff;
     box-shadow: 0px 0px 30px rgb(0 0 0 / 20%);
     padding: 25px;
@@ -73,15 +74,15 @@ th.sorting:nth-child(2) {
 }
 
 th.sorting:nth-child(4) {
-    min-width: 100px !important;
+    min-width: 185px !important;
 }
 
 th.sorting:nth-child(5) {
-    min-width: 120px !important;
+    min-width: 160px !important;
 }
 
 th.sorting:nth-child(6) {
-    min-width: 140px !important;
+    min-width: 185px !important;
 }
 
 th.sorting:nth-child(8) {
@@ -144,6 +145,8 @@ div#wc_map_datatable_length {
     padding: 12px 10px;
     border-radius: 3px;
     background: #275D94;
+    color: #fff;
+    border: 0;
 }
 
 /* select design */
@@ -174,19 +177,17 @@ select {
 
 
 select.minimal {
-    background-image:
-        linear-gradient(45deg, transparent 50%, gray 50%),
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%),
         linear-gradient(135deg, gray 50%, transparent 50%),
         linear-gradient(to right, #ccc, #ccc);
-    background-position:
-        calc(100% - 20px) calc(1em + 2px),
-        calc(100% - 15px) calc(1em + 2px),
+    background-position: calc(100% - 20px) calc(1em + -2px),
+        calc(100% - 15px) calc(1em + -2px),
         calc(100% - 2.5em) 0.5em;
-    background-size:
-        5px 5px,
+    background-size: 5px 5px,
         5px 5px,
         1px 1.5em;
     background-repeat: no-repeat;
+    width: 200px;
 }
 
 select.minimal:focus {
@@ -224,8 +225,12 @@ select:-moz-focusring {
     padding: 12px 10px;
     background: #275D94;
     border-radius: 3px;
+    border: 0;
+    color: #fff;
 }
-
+a.added_to_cart.wc-forward {
+    display: none;
+}
 .product_area p.product.woocommerce.add_to_cart_inline {
     margin: 0;
     padding: 0;
@@ -337,6 +342,11 @@ a.product_cart_button {
     animation-delay: 0;
 }
 
+.button_wrap p.product.woocommerce.add_to_cart_inline {
+    border: 0 !important;
+}
+
+
 @keyframes lds-facebook {
     0% {
         top: 8px;
@@ -353,6 +363,7 @@ a.product_cart_button {
 @media only screen and (max-width: 900px)  {
     .wmp_shop_wrapper {
         display: block;
+        margin: 0 !important;
     }
 
     .wmp_shop_wrapper .area:nth-child(1) {
@@ -363,4 +374,6 @@ a.product_cart_button {
         width: 100%;
     }
 }
+
+
 

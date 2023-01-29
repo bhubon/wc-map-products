@@ -2,7 +2,15 @@
     $(document).ready(function () {
 
         // datatable
-        $('#wc_map_datatable').DataTable();
+        $('#wc_map_datatable').DataTable({
+            language: {
+                'paginate': {
+                    'previous': 'zurück',
+                    'next': 'weiter',
+                },
+                "info": 'Anzeige _START_ bis _END_ von _TOTAL_ ergebnissen',
+            }
+        });
 
         // hide variation notice
         $('#variation_wrapper_close').click(function () {
@@ -27,7 +35,15 @@
                 jQuery.post(wmp_object.ajax_url, data, function (response) {
                     table_body.html('');
                     $('.product_area').html(response.data);
-                    $('#wc_map_datatable').DataTable();
+                    $('#wc_map_datatable').DataTable({
+                        language: {
+                            'paginate': {
+                                'previous': 'zurück',
+                                'next': 'weiter',
+                            },
+                            "info": 'Anzeige _START_ bis _END_ von _TOTAL_ ergebnissen',
+                        }
+                    });
                 });
             });
         }
@@ -43,7 +59,17 @@
                 jQuery.post(wmp_object.ajax_url, data, function (response) {
                     table_body.html('');
                     $('.product_area').html(response.data);
-                    $('#wc_map_datatable').DataTable();
+                    $('#wc_map_datatable').DataTable({
+                        language: {
+                            'paginate': {
+                                'previous': 'zurück',
+                                'next': 'weiter',
+                            },
+                            "info": 'Anzeige _START_ bis _END_ von _TOTAL_ ergebnissen',
+                        },
+                        
+                        
+                    });
                 });
             });
         }
@@ -65,7 +91,15 @@
             jQuery.post(wmp_object.ajax_url, data, function (response) {
                 table_body.html('');
                 $('.product_area').html(response.data);
-                $('#wc_map_datatable').DataTable();
+                $('#wc_map_datatable').DataTable({
+                    language: {
+                        'paginate': {
+                            'previous': 'zurück',
+                            'next': 'weiter',
+                        },
+                        "info": 'Anzeige _START_ bis _END_ von _TOTAL_ ergebnissen',
+                    }
+                });
             });
 
         });
@@ -85,21 +119,20 @@ function variation_change(me) {
         'variation_id': selected_value,
         'selected_count': selected_count,
     };
-    jQuery.post(wmp_object.ajax_url, data, function (response) {
-        // console.log(response.price);
-        // console.log(selected_product);
-        // console.log(jQuery(`#product_${selected_product}`));
-        // jQuery(`#${selected_product}`).html(response.price);
-        jQuery(`#producttr_${selected_product} span#${selected_product}`).html(response.price);
+    if (selected_count != '' && selected_count > 0) {
+        jQuery.post(wmp_object.ajax_url, data, function (response) {
+            jQuery(`#producttr_${selected_product} span#${selected_product}`).html(response.price);
 
+            jQuery(`#producttr_${selected_product} .button_wrap`).html(response.button);
+            if (response.staus == 1) {
+                jQuery(`#producttr_${selected_product} a.button`).attr('data-product_id', response.variation_id);
+            }
+            jQuery('.variation_info p').text(response.variation_info);
+            jQuery('.variation_info').css('display', 'block');
 
-
-        jQuery(`#producttr_${selected_product} .button_wrap`).html(response.button);
-        if (response.staus == 1) {
-            jQuery(`#producttr_${selected_product} a.button`).attr('data-product_id', response.variation_id);
-        }
-        jQuery('.variation_info p').text(response.variation_info);
-        jQuery('.variation_info').css('display', 'block');
-
-    });
+        });
+    } else {
+        jQuery(`#producttr_${selected_product} span#${selected_product}`).html('--');
+        jQuery(`#producttr_${selected_product} .button_wrap`).html('<a href="javascript::void(0);" disabled style="background:#7c8a99;" class="button product_cart_button" >Warenkorb</a>');
+    }
 }

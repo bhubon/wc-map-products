@@ -38,7 +38,7 @@ class WMP_Metaboxes {
             'name'       => __('PV Plant Value', 'wc-map-products'),
             'desc'       => __('Enter PV Plant Value Here', 'wc-map-products'),
             'id'         => 'wmp_product_pv_plant_value',
-            'type'       => 'text_money',
+            'type'       => 'text',
             'show_on_cb' => 'cmb2_hide_if_no_cats',
         ));
     }
