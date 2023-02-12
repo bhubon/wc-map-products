@@ -23,7 +23,7 @@ class WMP_Works {
     //     echo self::wmp_map_area();
     // }
     public function wmp_map() {
-        if(!is_page()){
+        if (!is_page()) {
             return false;
         }
         $product_data = '';
@@ -882,10 +882,13 @@ class WMP_Works {
 
             if ($_POST['selected_count'] == 1) {
                 $data['variation_info'] = get_option('variation_text_1');
+                $data['variation_headign'] = get_option('variation_heading_1');
             } elseif ($_POST['selected_count'] == 2) {
                 $data['variation_info'] = get_option('variation_text_2');
+                $data['variation_headign'] = get_option('variation_heading_2');
             } elseif ($_POST['selected_count'] == 3) {
                 $data['variation_info'] = get_option('variation_text_3');
+                $data['variation_headign'] = get_option('variation_heading_3');
             }
 
 
@@ -945,12 +948,24 @@ class WMP_Works {
                 $preview_url = sanitize_text_field($_POST['preview_url']);
                 update_option('address_preview_url', $preview_url);
             }
+            if (!empty($_POST['variation_one_heading'])) {
+                $heading_three = sanitize_text_field($_POST['variation_one_heading']);
+                update_option('variation_heading_1', $heading_three);
+            }
+            if (!empty($_POST['variation_two_heading'])) {
+                $heading_three = sanitize_text_field($_POST['variation_two_heading']);
+                update_option('variation_heading_2', $heading_three);
+            }
+            if (!empty($_POST['variation_three_heading'])) {
+                $heading_three = sanitize_text_field($_POST['variation_three_heading']);
+                update_option('variation_heading_3', $heading_three);
+            }
 
-?>
+            ?>
             <div class="notice notice-success is-dismissible">
                 <p><?php _e('Data Updated', 'sample-text-domain'); ?></p>
             </div>
-<?php
+            <?php
         }
 
         $html = '<style>
@@ -968,13 +983,25 @@ class WMP_Works {
             <table class="form-table editcomment" role="presentation">
                 <tbody>
                 <tr>
+                    <td class="first"><label for="first">Varitaion One Heading</label></td>
+                    <td><input type="text" name="variation_one_heading" placeholder="Varitaion One Heading" id="name" value="' . get_option('variation_heading_1') . '"></td>
+                </tr>
+                <tr>
                     <td class="first"><label for="first">Varitaion Text One</label></td>
                     <td><textarea name="variation_text_one" class="wmp_admin_textarea" placeholder="Varitaion Text One" id="first">' . get_option('variation_text_1') . '</textarea></td>
+                </tr>
+                <tr>
+                    <td class="first"><label for="">Varitaion Two Heading</label></td>
+                    <td><input type="text" name="variation_two_heading" placeholder="Varitaion Two Heading" id="name" value="' . get_option('variation_heading_3') . '"></td>
                 </tr>
                 <tr>
                     <td class="second"><label for="second">Varitaion Text Two</label></td>
                     <td><textarea name="variation_text_two" class="wmp_admin_textarea" placeholder="Varitaion Text Two" id="second">' . get_option('variation_text_2') . '</textarea></td>
                 </tr>
+                <tr>
+                <td class="first"><label for="">Varitaion Thre Heading</label></td>
+                <td><input type="text" name="variation_three_heading" placeholder="Varitaion Two Heading" id="name" value="' . get_option('variation_heading_3') . '"></td>
+            </tr>
                 <tr>
                     <td class="third"><label for="third">Varitaion Text Three</label></td>
                     <td><textarea name="variation_text_three" class="wmp_admin_textarea" placeholder="Varitaion Text Three" id="third">' . get_option('variation_text_3') . '</textarea></td>
@@ -1013,8 +1040,8 @@ class WMP_Works {
         return __('Warenkorb', 'wc-map-products');
     }
 
-    public function wmp_gead(){
-        if(is_page(5167)){
+    public function wmp_gead() {
+        if (is_page(5167)) {
             echo '<style>
             .container {
                 width: 100% !important;

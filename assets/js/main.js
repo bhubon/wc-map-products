@@ -128,6 +128,7 @@ function variation_change(me) {
                 jQuery(`#producttr_${selected_product} a.button`).attr('data-product_id', response.variation_id);
             }
             jQuery('.variation_info p').text(response.variation_info);
+            jQuery('.variation_info h4').html(response.variation_headign);
             jQuery('.variation_info').css('display', 'block');
 
         });
